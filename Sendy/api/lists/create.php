@@ -84,11 +84,10 @@ function validFields($api_key, $list_name, $app, $custom_fields, $field_types) {
     return $isValid;        
 }
 
-function getUserId()
+function getUserId($api_key)
 {
 	global $mysqli;
-    //weird way to retrieve a user. We only have an api_key, so take the first one (copied from create campaign...)
-    $q = 'SELECT id FROM login ORDER BY id ASC LIMIT 1';
+    $q = 'SELECT id FROM login WHERE api_key = "'.$api_key.'"';
     $r = mysqli_query($mysqli, $q);
     if ($r) while($row = mysqli_fetch_array($r)) $userID = $row['id'];
     return $userID;
@@ -116,7 +115,7 @@ if(!validFields($api_key, $list_name, $app, $fields, $fieldtypes))
     exit;
 }
 
-$userID = getUserId();
+$userID = getUserId($api_key);
 $custom_fields = convert_custom_fields($fields, $fieldtypes);
 
 //add new list
